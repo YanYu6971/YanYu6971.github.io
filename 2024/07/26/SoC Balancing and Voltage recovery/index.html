@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>SoC Balancing | 言雨的小屋</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="一，问题描述  二，控制策略    三，稳态分析  四，稳定性证明  五，仿真  数值仿真1，一致性测试 　 2，PNP 测试  3，负载切换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SoC Balancing">
+<meta property="og:url" content="http://example.com/2024/07/26/SoC%20Balancing%20and%20Voltage%20recovery/index.html">
+<meta property="og:site_name" content="言雨的小屋">
+<meta property="og:description" content="一，问题描述  二，控制策略    三，稳态分析  四，稳定性证明  五，仿真  数值仿真1，一致性测试 　 2，PNP 测试  3，负载切换">
+<meta property="og:locale">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240717102352038.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240717105627118.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240717110409229.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240717110448925.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240717110533881.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240717113616958.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240718102406529.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240718102556523.png">
+<meta property="og:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240718154149323.png">
+<meta property="article:published_time" content="2024-07-26T05:55:47.000Z">
+<meta property="article:modified_time" content="2024-07-26T06:54:01.727Z">
+<meta property="article:author" content="言雨">
+<meta property="article:tag" content="旅行日志和软硬件技术分享">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\ %E8%A8%80%E9%9B%A8 \AppData\Roaming\Typora\typora-user-images\image-20240717102352038.png">
+  
+    <link rel="alternate" href="/atom.xml" title="言雨的小屋" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">言雨的小屋</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">旅行日志和软硬件技术分享</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-SoC Balancing and Voltage recovery" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/07/26/SoC%20Balancing%20and%20Voltage%20recovery/" class="article-date">
+  <time class="dt-published" datetime="2024-07-26T05:55:47.000Z" itemprop="datePublished">2024-07-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      SoC Balancing
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="一，问题描述"><a href="# 一，问题描述" class="headerlink" title="一，问题描述"></a>一，问题描述</h1><p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240717102352038.png" alt="image-20240717102352038"></p>
+<p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240717105627118.png" alt="image-20240717105627118"></p>
+<h1 id="二，控制策略"><a href="# 二，控制策略" class="headerlink" title="二，控制策略"></a>二，控制策略</h1><p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240717110409229.png" alt="image-20240717110409229"></p>
+<img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240717110448925.png" alt="image-20240717110448925" style="zoom:67%;" />
+
+<p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240717110533881.png" alt="image-20240717110533881"></p>
+<h1 id="三，稳态分析"><a href="# 三，稳态分析" class="headerlink" title="三，稳态分析"></a>三，稳态分析 </h1><h1 id="四，稳定性证明"><a href="# 四，稳定性证明" class="headerlink" title="四，稳定性证明"></a> 四，稳定性证明 </h1><h1 id="五，仿真"><a href="# 五，仿真" class="headerlink" title="五，仿真"></a> 五，仿真 </h1><h2 id="数值仿真"><a href="# 数值仿真" class="headerlink" title="数值仿真"></a> 数值仿真</h2><h3 id="1，一致性测试"><a href="#1，一致性测试" class="headerlink" title="1，一致性测试"></a>1，一致性测试</h3><p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240717113616958.png" alt="image-20240717113616958"></p>
+<p>　</p>
+<h3 id="2，PNP 测试"><a href="#2，PNP 测试" class="headerlink" title="2，PNP 测试"></a>2，PNP 测试</h3><p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240718102406529.png" alt="image-20240718102406529"></p>
+<p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240718102556523.png" alt="image-20240718102556523"></p>
+<h3 id="3，负载切换"><a href="#3，负载切换" class="headerlink" title="3，负载切换"></a>3，负载切换</h3><p><img src="C:\Users\ 言雨 \AppData\Roaming\Typora\typora-user-images\image-20240718154149323.png" alt="image-20240718154149323"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/07/26/SoC%20Balancing%20and%20Voltage%20recovery/" data-id="clz2c9hgo0000bo7k6c2vbx2h" data-title="SoC Balancing" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/07/26/research/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          research
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/07/26/travel/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">travel</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/26/%E5%9B%9E%E5%BF%86/">回忆</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/26/research/">research</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/26/SoC%20Balancing%20and%20Voltage%20recovery/">SoC Balancing</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/26/travel/">travel</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/10/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 言雨<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
