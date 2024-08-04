@@ -264,11 +264,11 @@ btf.addGlobalFn('pjaxComplete', () => {
     const waline = Fn(Object.assign({
       el: '#waline-wrap',
       serverURL: 'https://waline.xieyubei.com',
-      pageview: ture,
+      pageview: true,
       dark: 'html[data-theme="dark"]',
       path: window.location.pathname,
       comment: true,
-    }, null))
+    }, {"locale":{"nick":"昵称","mail":"邮箱","link":"你的网站","placeholder":"你这么可爱一定会文明评论的吧～(填写邮箱可以收到回复通知哦)","requiredMeta":[],"mailError":"请填写正确的邮件地址","sofa":"快来抢占沙发~","level0":"锻体","level1":"练气","level2":"筑基","level3":"金丹","level4":"元婴","level5":"化神"},"emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/tw-emoji","https://cdn.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs","https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili"]}))
 
     const destroyWaline = () => {
       waline.destroy()
